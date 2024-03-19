@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/database/prismaService';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -18,11 +19,15 @@ export class UserService {
     if(userExists)
       throw new Error('Usuário já cadastrado para este e-mail.');
 
+    data.password = await bcrypt.hash(data.password, 7);
     const user = await this.prisma.user.create({
-      data,
+      data
     });
 
-    return user;
+    return {
+      ...user,
+      password: undefined
+    };
   }
 
   async findAll() {
@@ -42,7 +47,7 @@ export class UserService {
   async update(id: string, data: UpdateUserDto) {
     const userExists = await this.prisma.user.findUnique({
       where: {
-        id: id,
+        id: id
       }
     });
 
@@ -61,7 +66,7 @@ export class UserService {
   async remove(id: string) {
     const userExists = await this.prisma.user.findUnique({
       where: {
-        id: id,
+        id: id
       }
     });
 
