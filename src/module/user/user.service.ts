@@ -31,7 +31,12 @@ export class UserService {
   }
 
   async findAll() {
-    return await this.prisma.user.findMany();
+    const users = await this.prisma.user.findMany();
+
+    return users.map((item) => { 
+      delete item.password; 
+      return item; 
+    });
   }
 
   async findOne(id: string) {
@@ -54,13 +59,13 @@ export class UserService {
     if(!userExists)
       throw new Error('O Usuário não encotrado.');
 
+    data.password = userExists.password;
     await this.prisma.user.update({
       data,
       where: {
         id: id
       }
     });
-
   }
 
   async remove(id: string) {
