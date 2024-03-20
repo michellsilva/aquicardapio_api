@@ -15,7 +15,7 @@ import {
       if (err || !user) {
         throw new UnauthorizedException(err?.message);
       }
-  
+
       return user;
     }
   }

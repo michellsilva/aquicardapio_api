@@ -1,12 +1,24 @@
-import { ApiProperty } from "@nestjs/swagger"
-import { IsEmail } from "class-validator"
+import {
+    IsEmail,
+    IsString,
+    Matches,
+    MaxLength,
+    MinLength,
+  } from 'class-validator';
 
 export class CreateUserDto {
 
-    name: string
+  @IsString()
+  name: string
 
-    password: string
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message: 'A senha deve conter (Letras maiúsculas, Letras minúsculas, Caracter especial e Números)',
+  })
+  password: string
 
-    @IsEmail()
-    email: string
+  @IsEmail()
+  email: string
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/database/prismaService';
@@ -16,8 +16,12 @@ export class UserService {
       }
     });
 
-    if(userExists)
-      throw new Error('Usuário já cadastrado para este e-mail.');
+    if(userExists) {
+      throw new HttpException(
+        'Usuário já cadastrado para este e-mail.',
+        HttpStatus.BAD_REQUEST
+      );
+    }
 
     data.password = await bcrypt.hash(data.password, 7);
     const user = await this.prisma.user.create({
