@@ -4,4 +4,5 @@ export interface UserPayload {
     name: string;
     iat?: number;
     exp?: number;
+    roles: string;
 }

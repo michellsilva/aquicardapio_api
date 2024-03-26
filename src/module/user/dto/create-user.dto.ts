@@ -21,4 +21,7 @@ export class CreateUserDto {
 
   @IsEmail()
   email: string
+
+  @IsString()
+  roles: string
 }
